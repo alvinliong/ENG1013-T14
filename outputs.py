@@ -2,7 +2,7 @@
 # Last edited: 30 Aug 2023
 # Version 1.0
 
-def outputs():
+def temperature_outputs():
     """
     This function is a placeholder for the outputs subsystem
     :return 

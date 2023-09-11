@@ -12,7 +12,7 @@ board = pymata4.Pymata4()
 board.set_pin_mode_analog_input(0)  # thermistor A0 input
 
 
-def thermistor():
+def poll_thermistor():
     """
     This function retrieves data from the thermistor input
     :return rawData (int)
@@ -43,5 +43,5 @@ def thermistor_processing(rawData):
     # converting the resistance to temperature
     temperature = -21.21*math.log(resistance/1000) + 72.203
 
-    print("Thermistor data has been processed and now returning temperature measurements.")
+    print("Thermistor data has been processed and now returning temperature measurement.")
     return temperature

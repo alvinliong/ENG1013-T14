@@ -7,6 +7,7 @@ from control import polling_loop
 
 # set initial user defined variables
 pollingTime = 1.0
+maintenancePIN = 1234
 
 
 def clear_console():
@@ -85,7 +86,7 @@ def maintenance_adjustment_main():
     while True:
         userInput = input(
             "Enter the PIN or '1' to go back: ")
-        if userInput == "1234":
+        if userInput == maintenancePIN:
             system_parameters_menu()
             while True:
                 userInput = input("Please select a menu option: ")

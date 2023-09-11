@@ -5,8 +5,8 @@
 import time
 
 # import other subsystems
-from inputs import thermistor_processing, thermistor
-from outputs import outputs
+from inputs import thermistor_processing, poll_thermistor
+from outputs import temperature_outputs
 
 
 def polling_loop(pollingTime):
@@ -26,13 +26,13 @@ def polling_loop(pollingTime):
             startPollingTime = time.time()
 
             # collects the raw thermistor data
-            rawThermistorData = thermistor()
+            rawThermistorData = poll_thermistor()
 
             # processes the thermistor data
             print(f"Temperature: {thermistor_processing(rawThermistorData)}")
 
             # sends temperature data to outputs
-            outputs()
+            temperature_outputs()
 
             print("--- Ending polling cycle ---")
             # this delay has been added to show the duration of the polling loop in practice
