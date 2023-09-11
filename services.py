@@ -5,6 +5,9 @@
 # import other subsystems
 from control import polling_loop
 
+# set initial user defined variables
+pollingTime = 1.0
+
 
 def clear_console():
     """
@@ -41,7 +44,7 @@ def normal_operation_main():
     print("NORMAL OPERATION MODE")
     print("=" * 50)
     print("\n")
-    polling_loop()
+    polling_loop(pollingTime)
 
 
 def maintenance_adjustment_menu():
@@ -80,22 +83,22 @@ def maintenance_adjustment_main():
     """
     maintenance_adjustment_menu()
     while True:
-        user_input = input(
+        userInput = input(
             "Enter the PIN or '1' to go back: ")
-        if user_input == "1234":
+        if userInput == "1234":
             system_parameters_menu()
             while True:
-                user_input = input("Please select a menu option: ")
-                if (user_input == "1" or user_input == "2"):
+                userInput = input("Please select a menu option: ")
+                if (userInput == "1" or userInput == "2"):
                     print("System parameter edited.")
                     break
-                elif user_input == "3":
+                elif userInput == "3":
                     break
                 else:
                     print("You have not entered a valid menu option!",
                           "Please try again.")
             break
-        elif user_input == "1":
+        elif userInput == "1":
             break
         else:
             print("The pin is incorrect. Please try again")
@@ -125,8 +128,8 @@ def data_observation_main():
     """
     data_observation_menu()
     while True:
-        user_input = input("Please enter a menu option: ")
-        if user_input == "1":
+        userInput = input("Please enter a menu option: ")
+        if userInput == "1":
             break
         else:
             print("You have not entered a valid menu option!",
@@ -143,15 +146,15 @@ def main():
     while True:
         # Print the mode options
         main_menu()
-        menu_input = input("Please enter a menu option: ")
+        menuInput = input("Please enter a menu option: ")
 
-        if menu_input == "1":
+        if menuInput == "1":
             normal_operation_main()
-        elif menu_input == "2":
+        elif menuInput == "2":
             maintenance_adjustment_main()
-        elif menu_input == "3":
+        elif menuInput == "3":
             data_observation_main()
-        elif menu_input == "4":
+        elif menuInput == "4":
             print("Shutting down HVAC System.")
             break
         else:
