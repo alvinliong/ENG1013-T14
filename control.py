@@ -2,11 +2,13 @@
 # Last edited: 30 Aug 2023
 # Version 1.0
 
+from settings import *
+from outputs import temperature_led_outputs, seven_segment_display
+from inputs import thermistor_processing, poll_thermistor
 import time
 
-# import other subsystems
-from inputs import thermistor_processing, poll_thermistor
-from outputs import temperature_outputs
+
+# import functions and files
 
 
 def polling_loop(pollingTime):
@@ -17,6 +19,7 @@ def polling_loop(pollingTime):
     """
 
     while True:
+        # Run seven segment display
         try:
             print("Press CRTL+C at any time to exit the NORMAL OPERATION MODE")
             print("--- Polling time: " + str(pollingTime) + " secs ---")
@@ -29,14 +32,19 @@ def polling_loop(pollingTime):
             rawThermistorData = poll_thermistor()
 
             # processes the thermistor data
-            print(f"Temperature: {thermistor_processing(rawThermistorData)}")
+            currentTemperature = thermistor_processing(rawThermistorData)
+            print(f"Temperature: {currentTemperature}")
 
-            # sends temperature data to outputs
-            temperature_outputs()
+            # sends temperature data to LEDs
+            temperature_led_outputs(currentTemperature)
+
+            # add polling delay
+            time.sleep(pollingTime)
+
+            seven_segment_display("COOL")  # testing (still being worked on)
 
             print("--- Ending polling cycle ---")
-            # this delay has been added to show the duration of the polling loop in practice
-            time.sleep(pollingTime)
+
             print("--- Total polling loop cycle duration: %s seconds ---" %
                   (time.time() - startPollingTime))
 

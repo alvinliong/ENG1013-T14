@@ -2,14 +2,8 @@
 # Last edited: 30 Aug 2023
 # Version 1.0
 
+from settings import *
 import math
-from pymata4 import pymata4
-# Set up board
-board = pymata4.Pymata4()
-
-# initialise pins as inputs/outputs
-
-board.set_pin_mode_analog_input(0)  # thermistor A0 input
 
 
 def poll_thermistor():
@@ -18,12 +12,15 @@ def poll_thermistor():
     :return rawData (int)
     """
 
-    rawThermistorData = board.analog_read(0)[0]
+    # initialise pins as inputs/outputs
+    board.set_pin_mode_analog_input(1)  # thermistor input
+
+    rawThermistorData = board.analog_read(1)[0]
     print("Raw thermistor data has been retrieved.")
     return rawThermistorData
 
 
-def thermistor_processing(rawData):
+def thermistor_processing(rawThermistorData):
     """
     This function converts the resistance measurements from the thermistor into temperature measurements
     :param rawData (int)
@@ -34,14 +31,17 @@ def thermistor_processing(rawData):
     resistor1 = 10000  # resistor in series with thermistor (Ohms)
 
     # calculating the resistance of the thermistor
-    print(f"Raw thermistor value (analog): {rawData}")
-    voltageOut = rawData * (voltageIn/1023)
+    print(f"Raw thermistor value (analog): {rawThermistorData}")
+    voltageOut = rawThermistorData * (voltageIn/1023)
     print(f"Voltage Out: {voltageOut}")
     resistance = (resistor1 * voltageOut) / (voltageIn - voltageOut)
     print(f"Resistance: {resistance}")
 
     # converting the resistance to temperature
-    temperature = -21.21*math.log(resistance/1000) + 72.203
+    try:
+        temperature = -21.21*math.log(resistance/1000) + 72.203
+    except ValueError:
+        temperature = 0
 
     print("Thermistor data has been processed and now returning temperature measurement.")
     return temperature

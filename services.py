@@ -4,10 +4,8 @@
 
 # import other subsystems
 from control import polling_loop
-
-# set initial user defined variables
-pollingTime = 1.0
-maintenancePIN = 1234
+from outputs import seven_segment_display
+from settings import *
 
 
 def clear_console():
