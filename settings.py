@@ -2,18 +2,15 @@
 # Creator: HVAC Project T14
 # Last edited: 12 Sep
 
+# import functions and files
 from pymata4 import pymata4
 
-# initialise board
+# ---- initialise board ----
 global board
 board = pymata4.Pymata4()
 
-# initialise seven segment display message
-global currentMessage
-currentMessage = "    "
 
-# constant variables
-
+# ---- constant variables ----
 LOOKUP_DICTIONARY = {
     "0": "1111110",
     "1": "0110000",
@@ -80,12 +77,21 @@ LOOKUP_DICTIONARY = {
     " ": "0000000",
 }
 
-# set initial user defined variables
+# ---- set initial user modifiable variables ----
 
-# polling time of polling loop
-global pollingTime
-pollingTime = 1.0
+global systemSettings
 
-# the user PIN to gain access to maintenance settings
-global maintenancePIN
-maintenancePIN = 1234
+systemSettings = {
+    "blankSetting": None,  # blank placeholder setting
+    "maintenancePIN": 1234,  # the user PIN to gain access to maintenance settings
+    "pollingTime": 1.0,  # polling time of polling loop
+    "setting3": "hello"  # placeholder setting
+}
+
+systemSettingsParameters = {
+    "blankSetting": None,  # blank placeholder setting
+    # the user PIN must be between a value of 0 and 9999 (4 digits)
+    "maintenancePIN": [0, 9999],
+    "pollingTime": [1.0, 3.0],  # polling time must be between 1 and 3 seconds
+    "setting3": None  # placeholder setting
+}

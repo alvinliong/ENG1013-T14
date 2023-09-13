@@ -2,6 +2,7 @@
 # Last edited: 30 Aug 2023
 # Version 1.0
 
+# import functions and files
 from settings import *
 import math
 

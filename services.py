@@ -4,7 +4,6 @@
 
 # import other subsystems
 from control import polling_loop
-from outputs import seven_segment_display
 from settings import *
 
 
@@ -43,7 +42,7 @@ def normal_operation_main():
     print("NORMAL OPERATION MODE")
     print("=" * 50)
     print("\n")
-    polling_loop(pollingTime)
+    polling_loop(systemSettings["pollingTime"])
 
 
 def maintenance_adjustment_menu():
@@ -65,14 +64,86 @@ def system_parameters_menu():
     :return: None
     """
     clear_console()
-    print("MAINTENANCE ADJUSTMENT MODE - ACCESS GRANTED")
+    print("MAINTENANCE ADJUSTMENT MODE - SYSTEM PARAMETERS")
     print("=" * 50)
     print("\n")
     print("You have the following menu options:")
-    print("\t1. Edit system parameter 1")
-    print("\t2. Edit system parameter 2")
-    print("\t3. Return to the main menu.")
+    for i in range(1, len(systemSettings)):
+        print("\t" + str(i) + ". Edit " + list(systemSettings)[i])
+    print("\t" + str(len(systemSettings)) + ". Return to main menu")
     print("\n")
+
+
+def edit_system_setting_menu(setting, settingType, settingParameters):
+    """
+    This function prints the menu for the edit system setting menu
+    :return: None
+    """
+
+    clear_console()
+    print("EDIT SYSTEM PARAMATER - " + setting)
+    print("=" * 50)
+    print("\n")
+    print("Current value: " + str(systemSettings[setting]))
+    print("Setting type: " + str(settingType))
+    if settingParameters != None:
+        print("Allowable setting paramaters: Between " +
+              str(settingParameters[0]) + " and " + str(settingParameters[1]))
+    else:
+        print("Allowable setting paramaters: No parameters")
+    print("\n")
+
+
+def edit_system_setting_main(settingNumber):
+    """
+    This function handles all program logic for editing a system setting
+    :return: None
+    """
+    setting = list(systemSettings)[settingNumber]
+    settingType = type(systemSettings[setting])
+    settingParameters = systemSettingsParameters[setting]
+    edit_system_setting_menu(setting, settingType, settingParameters)
+    while True:
+        try:
+            userInput = input(
+                "Enter a new value or ENTER to go back: ")
+            if settingParameters == None and userInput != "":
+                if settingType == str:
+                    systemSettings[setting] = str(userInput)
+                    print("Setting updated.")
+                    break
+                elif settingType == int:
+                    systemSettings[setting] = int(userInput)
+                    print("Setting updated.")
+                    break
+                elif settingType == float:
+                    systemSettings[setting] = float(userInput)
+                    print("Setting updated.")
+                    break
+            elif settingParameters != None and userInput != "":
+                if settingType == str:
+                    systemSettings[setting] = str(userInput)
+                    break
+                elif settingType == int:
+                    if settingParameters[0] <= int(userInput) <= settingParameters[1]:
+                        systemSettings[setting] = int(userInput)
+                        print("Setting updated.")
+                        break
+                    else:
+                        print("Value is not in required range.")
+                elif settingType == float:
+                    if settingParameters[0] <= float(userInput) <= settingParameters[1]:
+                        systemSettings[setting] = float(userInput)
+                        print("Setting updated.")
+                        break
+                    else:
+                        print("Value is not in required range.")
+            elif userInput == "":
+                break
+
+        except ValueError:
+            print(
+                "Your input is not of the correct type for this setting. Please enter a " + str(settingType) + ".")
 
 
 def maintenance_adjustment_main():
@@ -82,25 +153,31 @@ def maintenance_adjustment_main():
     """
     maintenance_adjustment_menu()
     while True:
-        userInput = input(
-            "Enter the PIN or '1' to go back: ")
-        if userInput == maintenancePIN:
-            system_parameters_menu()
-            while True:
-                userInput = input("Please select a menu option: ")
-                if (userInput == "1" or userInput == "2"):
-                    print("System parameter edited.")
-                    break
-                elif userInput == "3":
-                    break
-                else:
-                    print("You have not entered a valid menu option!",
-                          "Please try again.")
-            break
-        elif userInput == "1":
-            break
-        else:
-            print("The pin is incorrect. Please try again")
+        try:
+            userInput = (input(
+                "Enter the PIN or '1' to go back: "))
+            if userInput == str(systemSettings["maintenancePIN"]):
+                system_parameters_menu()
+                while True:
+                    try:
+                        userInput = int(input("Please select a menu option: "))
+                        if (0 < userInput < len(systemSettings)):
+                            edit_system_setting_main(userInput)
+                            system_parameters_menu()
+                        elif userInput == len(systemSettings):
+                            break
+                        else:
+                            print("You have not entered a valid menu option!",
+                                  "Please try again.")
+                    except ValueError:
+                        print("Please enter a valid menu option (number)")
+                break
+            elif userInput == "1":
+                break
+            else:
+                print("The pin is incorrect. Please try again")
+        except ValueError:
+            print("Please enter a valid four digit PIN (numbers only)")
     print("Exiting MAINTENANCE ADJUSTMENT MODE")
 
 

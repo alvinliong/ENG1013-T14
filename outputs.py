@@ -2,6 +2,7 @@
 # Last edited: 11 Sep 2023
 # Version 1.0
 
+# import functions and files
 from settings import *
 import time
 
@@ -24,14 +25,15 @@ def temperature_led_outputs(temperature: int, goalTempRange: list[float] = [20, 
     :param goalTempRange(list[float]), The range covering the goal temperature. 
     Arranged as [Minimum, Maximum]. Has a default value of 20 to 25 degrees(C)
 
-    :return None
+    :return modeMessage, consoleMessage
     """
 
-    # These are placeholder values, change them if needed
+    # These are the pin values, change them if needed
     ledPinRed = 13
     ledPinBlue = 12
     ledSpeedPins = [10, 11]  # [Low speed LED, High speed LED]
-    # Temperature diffrence to trigger high ventilation speed.
+
+    # Temperature difference to trigger high ventilation speed.
     highSpeedDiff = 10
 
     highSpeed = True  # See note
@@ -51,26 +53,26 @@ def temperature_led_outputs(temperature: int, goalTempRange: list[float] = [20, 
         board.digital_pin_write(pin, 0)
 
     if temperature >= minGoalTemp and temperature <= maxGoalTemp:
-        print("Ambient temperature is within the goal temperature range.")
-        mode = "PASS"
+        consoleMessage = "Ambient temperature is within the goal temperature range."
+        modeMessage = "IDLE"
 
     elif temperature < minGoalTemp:
-        print('Ambient temperature is below the goal temperature range, heating ventilation commencing.')
+        consoleMessage = 'Ambient temperature is below the goal temperature range, heating ventilation commencing.'
+        modeMessage = "HEAT"
         board.digital_pin_write(ledPinRed, 1)
         board.digital_pin_write(ledSpeedPins[0], 1)
-        mode = "HEAT"
         if abs(temperature - minGoalTemp) > highSpeedDiff:
             board.digital_pin_write(ledSpeedPins[1], 1)
 
     elif temperature > maxGoalTemp:
-        print("Ambient temperature is above the goal temperature range, cooling ventilation commencing.")
+        consoleMessage = "Ambient temperature is above the goal temperature range, cooling ventilation commencing."
+        modeMessage = "COOL"
         board.digital_pin_write(ledPinBlue, 1)
         board.digital_pin_write(ledSpeedPins[0], 1)
-        mode = "COOL"
         if abs(maxGoalTemp - temperature) > highSpeedDiff:
             board.digital_pin_write(ledSpeedPins[1], 1)
 
-    return None
+    return [modeMessage, consoleMessage]
 
 
 def seven_segment_display(currentMessage):
@@ -93,5 +95,5 @@ def seven_segment_display(currentMessage):
                 board.digital_write(segmentPins[i], int(segmentData[i]))
         # Turn on the selected digit
         board.digital_write(digitPins[digit], 0)
-        time.sleep(0.005)
+        time.sleep(0.0025)
         board.digital_write(digitPins[digit], 1)

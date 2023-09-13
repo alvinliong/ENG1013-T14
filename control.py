@@ -2,53 +2,59 @@
 # Last edited: 30 Aug 2023
 # Version 1.0
 
+# import functions and files
 from settings import *
 from outputs import temperature_led_outputs, seven_segment_display
 from inputs import thermistor_processing, poll_thermistor
 import time
 
 
-# import functions and files
-
-
 def polling_loop(pollingTime):
     """
-    This function constantly polls the thermistor sensor for data until stopped by user
-    :return print statements (as of now)
+    This function begins the polling loop until exited via CTRL C. 
+    The seven-segment display and LEDs are constantly updated at a high frequency,
+    however, the thermistor is only polled at a rate per the pollingTime
+    :return print statements
     :param: polling_time (secs) (float)
     """
 
+    loopTimeStart = time.time()
+    modeMessage = "    "
+    currentTemperature = 0
+    print("Press CRTL+C at any time to exit the NORMAL OPERATION MODE")
+
     while True:
-        # Run seven segment display
+
         try:
-            print("Press CRTL+C at any time to exit the NORMAL OPERATION MODE")
-            print("--- Polling time: " + str(pollingTime) + " secs ---")
-            print("--- Starting polling cycle ---")
+            # outputs LEDs based on temperature
+            modeMessage, consoleMessage = temperature_led_outputs(
+                currentTemperature)
 
-            # starts the polling loop timer
-            startPollingTime = time.time()
+            # prints current mode to seven segment display
+            seven_segment_display(modeMessage)
 
-            # collects the raw thermistor data
-            rawThermistorData = poll_thermistor()
+            # if number of seconds has elapsed acoording to polling time, poll sensor for an update
+            if (abs(loopTimeStart - time.time()) >= systemSettings["pollingTime"]):
 
-            # processes the thermistor data
-            currentTemperature = thermistor_processing(rawThermistorData)
-            print(f"Temperature: {currentTemperature}")
+                print("--- Polling time: " + str(pollingTime) + " secs ---")
+                print("--- Starting polling cycle ---\n")
 
-            # sends temperature data to LEDs
-            temperature_led_outputs(currentTemperature)
+                # collects the raw thermistor data
+                rawThermistorData = poll_thermistor()
 
-            # add polling delay
-            time.sleep(pollingTime)
+                # processes the thermistor data
+                currentTemperature = thermistor_processing(rawThermistorData)
+                print(f"Temperature: {currentTemperature}")
 
-            seven_segment_display("COOL")  # testing (still being worked on)
+                # prints mode the HVAC is currently in (heat/cool/idle)
+                print(consoleMessage)
 
-            print("--- Ending polling cycle ---")
+                print("\n--- Ending polling cycle ---")
+                print("--- Total polling loop cycle duration: %s seconds ---\n" %
+                      (time.time() - loopTimeStart))
 
-            print("--- Total polling loop cycle duration: %s seconds ---" %
-                  (time.time() - startPollingTime))
-
-            print()
+                # resets loop stopwatch
+                loopTimeStart = time.time()
 
         except KeyboardInterrupt:
             print("Polling loop has ended. Exiting NORMAL OPERATION MODE")
