@@ -17,6 +17,7 @@ def polling_loop(pollingTime):
     :return print statements
     :param: polling_time (secs) (float)
     """
+    global temperatureList
 
     loopTimeStart = time.time()
     modeMessage = "    "
@@ -45,6 +46,8 @@ def polling_loop(pollingTime):
                 # processes the thermistor data
                 currentTemperature = thermistor_processing(rawThermistorData)
                 print(f"Temperature: {currentTemperature}")
+                temperatureList.append(currentTemperature)
+                print(temperatureList)
 
                 # prints mode the HVAC is currently in (heat/cool/idle)
                 print(consoleMessage)

@@ -7,7 +7,9 @@ from pymata4 import pymata4
 
 # ---- initialise board ----
 global board
+global temperatureList
 board = pymata4.Pymata4()
+temperatureList = []
 
 
 # ---- constant variables ----

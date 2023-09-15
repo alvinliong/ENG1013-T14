@@ -5,6 +5,7 @@
 # import other subsystems
 from control import polling_loop
 from settings import *
+from outputs import graph_temperature
 
 
 def clear_console():
@@ -190,7 +191,7 @@ def data_observation_menu():
     print("DATA OBSERVATION MODE")
     print("=" * 50)
     print("\n")
-    print("Graphing data not available yet.")
+    graph_temperature(temperatureList)
     print("\n")
     print("You have the following menu options:")
     print("\t1. Return to main menu")

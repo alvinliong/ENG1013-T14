@@ -5,9 +5,10 @@
 # import functions and files
 from settings import *
 import time
+import matplotlib.pyplot as plt
 
 
-def temperature_led_outputs(temperature: int, goalTempRange: list[float] = [20, 25]) -> None:
+def temperature_led_outputs(temperature: float, goalTempRange: list[float] = [20, 25]):
     """
     This function triggers several outputs based on the inputted temperature
 
@@ -74,6 +75,30 @@ def temperature_led_outputs(temperature: int, goalTempRange: list[float] = [20, 
 
     return [modeMessage, consoleMessage]
 
+def graph_temperature(tempList: list[float]):
+    """
+    Graphs past 20 seconds of thermistor readings
+    :param tempList, A list containing recorded temperature values with the latest value at the end
+    :return None
+    """
+    pollingTime = systemSettings.get('pollingTime')
+    length = int(20//pollingTime)
+    times = [-1*(i*pollingTime) for i in range(length, 0, -1)]
+
+    if len(tempList) < length:
+        print('Insufficient data to plot graph')
+        return
+    elif len(tempList) >= length:
+        tempList = tempList[-length:]
+
+        plt.figure(1)
+        plt.xlabel("Time (s)")
+        plt.ylabel("Temperature (C)")
+        plt.title("Temperature over past 20 seconds")
+        plt.xlim(times[0],times[-1])
+        plt.plot(times,tempList)
+        plt.show()
+
 
 def seven_segment_display(currentMessage):
 
@@ -97,3 +122,7 @@ def seven_segment_display(currentMessage):
         board.digital_write(digitPins[digit], 0)
         time.sleep(0.0025)
         board.digital_write(digitPins[digit], 1)
+
+if __name__ == '__main__':
+    tempList = [1/i for i in range(1,21)]
+    graph_temperature(tempList)
