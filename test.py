@@ -85,17 +85,17 @@ def display_character(board, char, digit):
 board = pymata4.Pymata4()
 
 # Set the pins for the 4-digit 7-segment display
-segmentPins = [6, 8, 4, 3, 2, 7, 5]
+segmentPins = [18, 16, 19, 3, 2, 17, 4]
 
 # Set the common pins for the digits (anodes)
-digitPins = [16, 17, 18, 19]
+digitPins = [5, 7, 8, 9]
 
 # Set the pins as OUTPUT
 for pin in segmentPins + digitPins:
     board.set_pin_mode_digital_output(pin)
 
 # Display a message
-message = "4321"
+message = "8888"
 while True:
     for digit in range(4):
         display_character(board, message[digit], digit)

@@ -1,5 +1,5 @@
 # Control subsystem
-# Last edited: 30 Aug 2023
+# Last edited: 15 Sep 2023
 # Version 1.0
 
 # import functions and files
@@ -47,7 +47,7 @@ def polling_loop(pollingTime):
                 currentTemperature = thermistor_processing(rawThermistorData)
                 print(f"Temperature: {currentTemperature}")
                 temperatureList.append(currentTemperature)
-                print(temperatureList)
+                # print(temperatureList)
 
                 # prints mode the HVAC is currently in (heat/cool/idle)
                 print(consoleMessage)

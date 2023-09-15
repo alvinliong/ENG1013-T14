@@ -1,14 +1,16 @@
 # Settings file where all global user-modifiable variables are initialised
 # Creator: HVAC Project T14
-# Last edited: 12 Sep
+# Last edited: 15 Sep
 
 # import functions and files
 from pymata4 import pymata4
 
 # ---- initialise board ----
 global board
-global temperatureList
 board = pymata4.Pymata4()
+
+# ---- initialise temperature list (for graphing) ----
+global temperatureList
 temperatureList = []
 
 
@@ -86,13 +88,13 @@ global systemSettings
 systemSettings = {
     "blankSetting": None,  # blank placeholder setting
     "maintenancePIN": 1234,  # the user PIN to gain access to maintenance settings
-    "pollingTime": 1.0,  # polling time of polling loop
-    "setting3": "hello"  # placeholder setting
+    "pollingTime": 1,  # polling time of polling loop
+    "setting3": "placeholderString"  # placeholder setting
 }
 
 systemSettingsParameters = {
     "blankSetting": None,  # blank placeholder setting
-    # the user PIN must be between a value of 0 and 9999 (4 digits)
+    # the user PIN must be between a value of 0 and 9999 (max 4 digits)
     "maintenancePIN": [0, 9999],
     "pollingTime": [1.0, 3.0],  # polling time must be between 1 and 3 seconds
     "setting3": None  # placeholder setting

@@ -1,5 +1,5 @@
 # Services subsystem
-# Last edited: 30 Aug 2023
+# Last edited: 15 Sep 2023
 # Version 1.0
 
 # import other subsystems
@@ -55,7 +55,7 @@ def maintenance_adjustment_menu():
     print("MAINTENANCE ADJUSTMENT MODE LOCKED")
     print("=" * 50)
     print("\n")
-    print("The MAINTENANCE ADJUSTMENT MODE requires an access PIN (1234 for now)")
+    print("The MAINTENANCE ADJUSTMENT MODE requires an access PIN (default: 1234)")
     print("\n")
 
 

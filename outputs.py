@@ -1,5 +1,5 @@
 # Outputs subsystem
-# Last edited: 11 Sep 2023
+# Last edited: 15 Sep 2023
 # Version 1.0
 
 # import functions and files
@@ -75,6 +75,7 @@ def temperature_led_outputs(temperature: float, goalTempRange: list[float] = [20
 
     return [modeMessage, consoleMessage]
 
+
 def graph_temperature(tempList: list[float]):
     """
     Graphs past 20 seconds of thermistor readings
@@ -86,7 +87,7 @@ def graph_temperature(tempList: list[float]):
     times = [-1*(i*pollingTime) for i in range(length, 0, -1)]
 
     if len(tempList) < length:
-        print('Insufficient data to plot graph')
+        print('Insufficient data to plot graph. Minimum 20 seconds needed.')
         return
     elif len(tempList) >= length:
         tempList = tempList[-length:]
@@ -95,17 +96,22 @@ def graph_temperature(tempList: list[float]):
         plt.xlabel("Time (s)")
         plt.ylabel("Temperature (C)")
         plt.title("Temperature over past 20 seconds")
-        plt.xlim(times[0],times[-1])
-        plt.plot(times,tempList)
+        plt.xlim(times[0], times[-1])
+        plt.plot(times, tempList)
         plt.show()
 
 
 def seven_segment_display(currentMessage):
+    """
+    Displays a four digit static message on the seven segment display
+    :param currentMessage (string)
+    :return None
+    """
 
     # Set the pins for the 4-digit 7-segment display
-    segmentPins = [6, 8, 4, 3, 2, 7, 5]
+    segmentPins = [18, 16, 19, 3, 2, 17, 4]
     # Set the common pins for the digits (anodes)
-    digitPins = [16, 17, 18, 19]
+    digitPins = [5, 7, 8, 9]
 
     # Set the pins as OUTPUT
     for pin in segmentPins + digitPins:
@@ -120,9 +126,10 @@ def seven_segment_display(currentMessage):
                 board.digital_write(segmentPins[i], int(segmentData[i]))
         # Turn on the selected digit
         board.digital_write(digitPins[digit], 0)
-        time.sleep(0.0025)
+        time.sleep(0.003)
         board.digital_write(digitPins[digit], 1)
 
+
 if __name__ == '__main__':
-    tempList = [1/i for i in range(1,21)]
+    tempList = [1/i for i in range(1, 21)]
     graph_temperature(tempList)

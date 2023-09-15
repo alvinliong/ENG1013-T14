@@ -1,5 +1,5 @@
 # Inputs subsystem
-# Last edited: 30 Aug 2023
+# Last edited: 15 Sep 2023
 # Version 1.0
 
 # import functions and files
@@ -34,15 +34,15 @@ def thermistor_processing(rawThermistorData):
     # calculating the resistance of the thermistor
     print(f"Raw thermistor value (analog): {rawThermistorData}")
     voltageOut = rawThermistorData * (voltageIn/1023)
-    print(f"Voltage Out: {voltageOut}")
+    # print(f"Voltage Out: {voltageOut}")
     resistance = (resistor1 * voltageOut) / (voltageIn - voltageOut)
     print(f"Resistance: {resistance}")
 
     # converting the resistance to temperature
     try:
-        temperature = -21.21*math.log(resistance/1000) + 72.203
+        temperature = -6.7606*(resistance/1000) + 94.406
     except ValueError:
         temperature = 0
 
-    print("Thermistor data has been processed and now returning temperature measurement.")
+    # print("Thermistor data has been processed and now returning temperature measurement.")
     return temperature
