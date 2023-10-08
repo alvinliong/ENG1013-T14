@@ -6,6 +6,7 @@
 from control import polling_loop
 from settings import *
 from outputs import graph_temperature
+import time
 
 
 def clear_console():
@@ -104,6 +105,9 @@ def edit_system_setting_main(settingNumber):
     settingType = type(systemSettings[setting])
     settingParameters = systemSettingsParameters[setting]
     edit_system_setting_menu(setting, settingType, settingParameters)
+
+    global adminAccessTime
+
     while True:
         try:
             userInput = input(
@@ -153,32 +157,58 @@ def maintenance_adjustment_main():
     :return: None
     """
     maintenance_adjustment_menu()
+    global pinAttempts
+    global pinAttemptsTime
+    global adminAccessTime
+
+    # once 2 minutes has passed
+    if (pinAttempts >= 3 and (systemSettings["pinAttemptsLockoutTime"] - (time.time() - pinAttemptsTime)) < 0):
+        pinAttempts = 0
+
     while True:
-        try:
-            userInput = (input(
-                "Enter the PIN or '1' to go back: "))
-            if userInput == str(systemSettings["maintenancePIN"]):
-                system_parameters_menu()
-                while True:
-                    try:
-                        userInput = int(input("Please select a menu option: "))
-                        if (0 < userInput < len(systemSettings)):
-                            edit_system_setting_main(userInput)
-                            system_parameters_menu()
-                        elif userInput == len(systemSettings):
-                            break
-                        else:
-                            print("You have not entered a valid menu option!",
-                                  "Please try again.")
-                    except ValueError:
-                        print("Please enter a valid menu option (number)")
-                break
-            elif userInput == "1":
-                break
-            else:
-                print("The pin is incorrect. Please try again")
-        except ValueError:
-            print("Please enter a valid four digit PIN (numbers only)")
+
+        # if allowable pin attempts has been exceeded, check if timer is less than 120 seconds
+        if (pinAttempts >= 3 and (time.time() - pinAttemptsTime) < systemSettings["pinAttemptsLockoutTime"]):
+            print("Pin attempts exceeded allowable amount (3 attempts). Please wait "
+                  + str((round(systemSettings["pinAttemptsLockoutTime"] - (time.time() - pinAttemptsTime), 2))) + " secs before trying again.")
+            break
+        else:
+            try:
+                userInput = (input(
+                    "Enter the PIN or '1' to go back: "))
+                if userInput == str(systemSettings["maintenancePIN"]):
+                    adminAccessTime = time.time()  # start admin timeout timer
+                    system_parameters_menu()
+                    pinAttempts = 0
+                    while True:
+                        try:
+                            userInput = int(
+                                input("Please select a menu option: "))
+                            if (time.time() - adminAccessTime < systemSettings["adminAccessTimeoutDuration"]):
+                                if (0 < userInput < len(systemSettings)):
+                                    edit_system_setting_main(userInput)
+                                    system_parameters_menu()
+                                elif userInput == len(systemSettings):
+                                    break
+                                else:
+                                    print("You have not entered a valid menu option!",
+                                          "Please try again.")
+                            else:
+                                print("Admin access timed out! Maximum duration: " +
+                                      str(systemSettings["adminAccessTimeoutDuration"]) + " secs.")
+                                break
+                        except ValueError:
+                            print("Please enter a valid menu option (number)")
+                    break
+                elif userInput == "1":
+                    break
+                else:
+                    pinAttempts += 1
+                    if (pinAttempts >= 3):
+                        pinAttemptsTime = time.time()
+                    print("The pin is incorrect. Please try again")
+            except ValueError:
+                print("Please enter a valid four digit PIN (numbers only)")
     print("Exiting MAINTENANCE ADJUSTMENT MODE")
 
 

@@ -22,32 +22,42 @@ def polling_loop(pollingTime):
     loopTimeStart = time.time()
     modeMessage = "    "
     currentTemperature = 0
+    filteredTemperature = 0
+    lastTempValues = []
     print("Press CRTL+C at any time to exit the NORMAL OPERATION MODE")
 
     while True:
-
         try:
             # outputs LEDs based on temperature
             modeMessage, consoleMessage = temperature_led_outputs(
-                currentTemperature)
+                filteredTemperature)
 
             # prints current mode to seven segment display
             seven_segment_display(modeMessage)
 
+            # collects the raw thermistor data
+            rawThermistorData = poll_thermistor()
+
+            # processes the thermistor data and converts to temperature
+            currentTemperature = thermistor_processing(rawThermistorData)
+            temperatureList.append(currentTemperature)
+
+            # collects all temperature values in past second
+            lastTempValues.append(currentTemperature)
+
             # if number of seconds has elapsed acoording to polling time, poll sensor for an update
             if (abs(loopTimeStart - time.time()) >= systemSettings["pollingTime"]):
+
+                filteredTemperature = sum(lastTempValues) / len(lastTempValues)
 
                 print("--- Polling time: " + str(pollingTime) + " secs ---")
                 print("--- Starting polling cycle ---\n")
 
-                # collects the raw thermistor data
-                rawThermistorData = poll_thermistor()
+                # print average temperature
+                print(f"Temperature: {filteredTemperature}")
 
-                # processes the thermistor data
-                currentTemperature = thermistor_processing(rawThermistorData)
-                print(f"Temperature: {currentTemperature}")
-                temperatureList.append(currentTemperature)
-                # print(temperatureList)
+                # clear last temp values
+                lastTempValues = []
 
                 # prints mode the HVAC is currently in (heat/cool/idle)
                 print(consoleMessage)

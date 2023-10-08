@@ -7,12 +7,19 @@ from pymata4 import pymata4
 
 # ---- initialise board ----
 global board
-board = pymata4.Pymata4()
+# board = pymata4.Pymata4()
 
 # ---- initialise temperature list (for graphing) ----
 global temperatureList
 temperatureList = []
 
+# ---- initialise other variables ----
+global pinAttempts
+pinAttempts = 0
+
+global pinAttemptsTime
+
+global adminAccessTime
 
 # ---- constant variables ----
 LOOKUP_DICTIONARY = {
@@ -88,8 +95,11 @@ global systemSettings
 systemSettings = {
     "blankSetting": None,  # blank placeholder setting
     "maintenancePIN": 1234,  # the user PIN to gain access to maintenance settings
-    "pollingTime": 1,  # polling time of polling loop
-    "setting3": "placeholderString"  # placeholder setting
+    "pollingTime": 1.0,  # polling time of polling loop
+    # lockout time after exceeded pin attempts (seconds)
+    "pinAttemptsLockoutTime": 120.0,
+    # timeout duration for admin access (seconds)
+    "adminAccessTimeoutDuration": 10.0
 }
 
 systemSettingsParameters = {
@@ -97,5 +107,7 @@ systemSettingsParameters = {
     # the user PIN must be between a value of 0 and 9999 (max 4 digits)
     "maintenancePIN": [0, 9999],
     "pollingTime": [1.0, 3.0],  # polling time must be between 1 and 3 seconds
-    "setting3": None  # placeholder setting
+    # lockout time must be between 1 and 120 seconds
+    "pinAttemptsLockoutTime": [1.0, 120.0],
+    "adminAccessTimeoutDuration": [0.0, 120.0]
 }

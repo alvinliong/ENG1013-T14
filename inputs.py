@@ -17,7 +17,7 @@ def poll_thermistor():
     board.set_pin_mode_analog_input(1)  # thermistor input
 
     rawThermistorData = board.analog_read(1)[0]
-    print("Raw thermistor data has been retrieved.")
+    # print("Raw thermistor data has been retrieved.")
     return rawThermistorData
 
 
@@ -32,11 +32,11 @@ def thermistor_processing(rawThermistorData):
     resistor1 = 10000  # resistor in series with thermistor (Ohms)
 
     # calculating the resistance of the thermistor
-    print(f"Raw thermistor value (analog): {rawThermistorData}")
+    # print(f"Raw thermistor value (analog): {rawThermistorData}")
     voltageOut = rawThermistorData * (voltageIn/1023)
     # print(f"Voltage Out: {voltageOut}")
     resistance = (resistor1 * voltageOut) / (voltageIn - voltageOut)
-    print(f"Resistance: {resistance}")
+    # print(f"Resistance: {resistance}")
 
     # converting the resistance to temperature
     try:
