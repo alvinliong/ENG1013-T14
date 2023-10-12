@@ -8,10 +8,15 @@ from pymata4 import pymata4
 # ---- initialise board ----
 global board
 # board = pymata4.Pymata4()
+# UNCOMMENT ABOVE LINE WHEN CONNECTED TO ARDUINO
 
 # ---- initialise temperature list (for graphing) ----
 global temperatureList
 temperatureList = []
+
+# for testing only , remove for production
+temperatureList = [19, 20, 21, 20, 20, 20, 21, 22,
+                   22, 22, 21, 20, 20, 20, 19, 19, 20, 19, 21, 22]
 
 # ---- initialise other variables ----
 global pinAttempts

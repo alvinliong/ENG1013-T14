@@ -98,7 +98,18 @@ def graph_temperature(tempList: list[float]):
         plt.title("Temperature over past 20 seconds")
         plt.xlim(times[0], times[-1])
         plt.plot(times, tempList)
+        figure = plt.gcf()
         plt.show()
+
+    # wait for figure window to close, then save to file
+    while True:
+        if not plt.fignum_exists(1):
+            # get current time for file name
+            currentTime = time.strftime(
+                '%d-%m-%Y-%H:%M:%S', time.localtime(time.time()))
+            fileName = "Graph_" + currentTime
+            figure.savefig(fileName)
+            break
 
 
 def seven_segment_display(currentMessage):
