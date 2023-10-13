@@ -87,7 +87,7 @@ def thermometer_outputs(temperature: float):
 
     tempRange = [0,30] # [Min, Max] temperature
     tempRange = [tempRange[0]] + [(tempRange[1]-tempRange[0])*i/7 for i in range(1,8)]
-    # 000000
+    # Qa is the coldest LED, Qh is the hottest
 
     bits = []
     for temp in tempRange:
@@ -95,6 +95,7 @@ def thermometer_outputs(temperature: float):
             bits.append(1)
         else:
             bits.append(0)
+    bits = bits[::-1]
 
     board.digital_pin_write(rclkPin, 0)
     board.digital_pin_write(srclrPin, 1)
