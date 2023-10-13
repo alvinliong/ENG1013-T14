@@ -148,6 +148,33 @@ def graph_temperature(tempList: list[float]):
             figure.savefig(fileName)
             break
 
+def temperature_diff(tempList:list[float]) -> float:
+    '''
+    Prints a console message if the rate of temperature change is of high enough magnitude. Also returns the rate of change when called
+    :param tempList, A list containing recorded temperature values with the latest value at the end
+    '''
+    magnitude = 5 # Max change in one polling loop time before alert triggers
+    sample = 3 # How many dT/dt values it samples to get temperature change
+    dt = systemSettings.get('pollingTime')
+    dT = [tempList[i] - tempList[i-1] for i in range(1,len(tempList))]
+
+    if len(dT) < sample:
+        dTdt = [dT/dt for dT in dT] # Calculates dT with what it has if not enough values to sample
+    else:
+        dT = dT[len(dT)-sample:]
+        dTdt = [dT/dt for dT in dT]
+    
+    dTdt = sum(dTdt)/len(dTdt)
+
+    if dTdt > magnitude:
+        print(f'Temperature rapidly increasing! dT/dt = {dTdt: .2f}')
+    elif dTdt < -magnitude:
+        print(f'Temperature rapidly decreasing! dT/dt = {dTdt: .2f}')
+
+    return dTdt
+
+
+
 
 def seven_segment_display(currentMessage):
     """
@@ -179,5 +206,7 @@ def seven_segment_display(currentMessage):
 
 
 if __name__ == '__main__':
-    tempList = [1/i for i in range(1, 21)]
+    tempList = [100 - 5.1*i for i in range(1, 21)]
+    print(tempList)
+    temperature_diff(tempList)
     graph_temperature(tempList)
