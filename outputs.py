@@ -86,7 +86,7 @@ def thermometer_outputs(temperature: float):
     oePin = 6
 
     tempRange = [0,30] # [Min, Max] temperature
-    tempRange = [tempRange[0]] + [(tempRange[1]-tempRange[0])*i/6 for i in range(1,8)] + [tempRange[1]]
+    tempRange = [tempRange[0]] + [(tempRange[1]-tempRange[0])*i/7 for i in range(1,8)]
     # 000000
 
     bits = []
