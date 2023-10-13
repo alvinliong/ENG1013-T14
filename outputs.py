@@ -75,6 +75,42 @@ def temperature_led_outputs(temperature: float, goalTempRange: list[float] = [20
 
     return [modeMessage, consoleMessage]
 
+def thermometer_outputs(temperature: float):
+    """
+    Writes the LEDs for the thermometer. The LEDs use a shift register
+    """
+    serPin = 2
+    srclkPin = 3
+    rclkPin = 4
+    srclrPin = 5
+    oePin = 6
+
+    tempRange = [0,30] # [Min, Max] temperature
+    tempRange = [tempRange[0]] + [(tempRange[1]-tempRange[0])*i/6 for i in range(1,8)] + [tempRange[1]]
+    # 000000
+
+    bits = []
+    for temp in tempRange:
+        if temperature > temp:
+            bits.append(1)
+        else:
+            bits.append(0)
+
+    board.digital_pin_write(rclkPin, 0)
+    board.digital_pin_write(srclrPin, 1)
+
+    for i in bits:
+        board.digital_pin_write(serPin, i)
+        board.digital_pin_write(srclkPin, 1)
+        board.digital_pin_write(srclkPin, 0)
+        board.digital_pin_write(serPin, 0)
+    
+    board.digital_pin_write(rclkPin, 1)
+    board.digital_pin_write(srclrPin, 0)
+
+
+
+
 
 def graph_temperature(tempList: list[float]):
     """
