@@ -105,6 +105,8 @@ def thermometer_outputs(temperature: float):
         board.digital_pin_write(srclkPin, 1)
         board.digital_pin_write(srclkPin, 0)
         board.digital_pin_write(serPin, 0)
+    board.digital_pin_write(rclkPin, 1)
+    board.digital_pin_write(rclkPin, 0)
 
     for i in bits:
         board.digital_pin_write(serPin, i)
