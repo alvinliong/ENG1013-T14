@@ -7,7 +7,7 @@ from pymata4 import pymata4
 
 # ---- initialise board ----
 global board
-# board = pymata4.Pymata4()
+board = pymata4.Pymata4()
 # UNCOMMENT ABOVE LINE WHEN CONNECTED TO ARDUINO
 
 # ---- initialise temperature list (for graphing) ----
@@ -15,8 +15,8 @@ global temperatureList
 temperatureList = []
 
 # for testing only , remove for production
-temperatureList = [19, 20, 21, 20, 20, 20, 21, 22,
-                   22, 22, 21, 20, 20, 20, 19, 19, 20, 19, 21, 22]
+# temperatureList = [19, 20, 21, 20, 20, 20, 21, 22,
+                #    22, 22, 21, 20, 20, 20, 19, 19, 20, 19, 21, 22]
 
 # ---- initialise other variables ----
 global pinAttempts
@@ -25,6 +25,9 @@ pinAttempts = 0
 global pinAttemptsTime
 
 global adminAccessTime
+
+global digitShiftTimeStart
+digitShiftTimeStart = 0
 
 # ---- constant variables ----
 LOOKUP_DICTIONARY = {
@@ -44,14 +47,14 @@ LOOKUP_DICTIONARY = {
     "D": "0111101",
     "E": "1001111",
     "F": "1000111",
-    "G": "1011110",
+    "G": "1011111",
     "H": "0110111",
     "I": "0110000",
     "J": "0111000",
     "K": "0010111",
     "L": "0001110",
     "M": "0110111",
-    "N": "1101010",
+    "N": "1110110",
     "O": "1111110",
     "P": "1100111",
     "Q": "1111111",
@@ -91,6 +94,7 @@ LOOKUP_DICTIONARY = {
     "y": "0110011",
     "z": "1101101",
     " ": "0000000",
+    "-": "0000001",
 }
 
 # ---- set initial user modifiable variables ----

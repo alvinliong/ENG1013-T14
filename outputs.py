@@ -55,11 +55,11 @@ def temperature_led_outputs(temperature: float, goalTempRange: list[float] = [20
 
     if temperature >= minGoalTemp and temperature <= maxGoalTemp:
         consoleMessage = "Ambient temperature is within the goal temperature range."
-        modeMessage = "IDLE"
+        modeMessage = "TEMP IN RANGE - MODE: IDLE"
 
     elif temperature < minGoalTemp:
         consoleMessage = 'Ambient temperature is below the goal temperature range, heating ventilation commencing.'
-        modeMessage = "HEAT"
+        modeMessage = "TEMP UNDER - MODE: HEATING"
         board.digital_pin_write(ledPinRed, 1)
         board.digital_pin_write(ledSpeedPins[0], 1)
         if abs(temperature - minGoalTemp) > highSpeedDiff:
@@ -67,7 +67,7 @@ def temperature_led_outputs(temperature: float, goalTempRange: list[float] = [20
 
     elif temperature > maxGoalTemp:
         consoleMessage = "Ambient temperature is above the goal temperature range, cooling ventilation commencing."
-        modeMessage = "COOL"
+        modeMessage = "TEMP OVER - MODE: COOLING"
         board.digital_pin_write(ledPinBlue, 1)
         board.digital_pin_write(ledSpeedPins[0], 1)
         if abs(maxGoalTemp - temperature) > highSpeedDiff:
@@ -112,7 +112,7 @@ def graph_temperature(tempList: list[float]):
             break
 
 
-def seven_segment_display(currentMessage):
+def seven_segment_display(currentMessage, currentDigit):
     """
     Displays a four digit static message on the seven segment display
     :param currentMessage (string)
@@ -120,25 +120,38 @@ def seven_segment_display(currentMessage):
     """
 
     # Set the pins for the 4-digit 7-segment display
-    segmentPins = [18, 16, 19, 3, 2, 17, 4]
+    # segmentPins = [18, 16, 19, 3, 2, 17, 4]
+    serPin = 3
+    rclkPin = 4
+    srclkPin = 5
     # Set the common pins for the digits (anodes)
-    digitPins = [5, 7, 8, 9]
+    digitPins = [6, 7, 8, 9]
 
     # Set the pins as OUTPUT
-    for pin in segmentPins + digitPins:
+    for pin in digitPins:
         board.set_pin_mode_digital_output(pin)
 
-    # Display the message
+    board.set_pin_mode_digital_output(serPin)
+    board.set_pin_mode_digital_output(rclkPin)
+    board.set_pin_mode_digital_output(srclkPin)
+
+    currentMessage = currentMessage[currentDigit:currentDigit+4]
+    
     for digit in range(4):
         char = currentMessage[digit]
         if char in LOOKUP_DICTIONARY:
-            segmentData = LOOKUP_DICTIONARY[char]
+            segmentData = LOOKUP_DICTIONARY[char][::-1]
             for i in range(7):
-                board.digital_write(segmentPins[i], int(segmentData[i]))
+                board.digital_write(serPin, int(segmentData[i]))
+                board.digital_write(srclkPin, 0)
+                board.digital_write(srclkPin, 1)
+            board.digital_write(rclkPin, 0)
+            board.digital_write(rclkPin, 1)
         # Turn on the selected digit
         board.digital_write(digitPins[digit], 0)
         time.sleep(0.003)
         board.digital_write(digitPins[digit], 1)
+    
 
 
 if __name__ == '__main__':

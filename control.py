@@ -18,12 +18,15 @@ def polling_loop(pollingTime):
     :param: polling_time (secs) (float)
     """
     global temperatureList
+    global digitShiftTimeStart
+    digitShiftTimeStart = time.time()
 
     loopTimeStart = time.time()
     modeMessage = "    "
     currentTemperature = 0
     filteredTemperature = 0
     lastTempValues = []
+    scrollSpeed = 0.5 
     print("Press CRTL+C at any time to exit the NORMAL OPERATION MODE")
 
     while True:
@@ -31,9 +34,19 @@ def polling_loop(pollingTime):
             # outputs LEDs based on temperature
             modeMessage, consoleMessage = temperature_led_outputs(
                 filteredTemperature)
+            
+             # add extra space for 4+ character message to loop clearly
+            if len(modeMessage) > 4:
+                modeMessage = "  " + modeMessage + "  "
+            
+            
+            digitShiftTimer = time.time() - digitShiftTimeStart
+            currentDigit = round(digitShiftTimer/scrollSpeed) 
+            if (digitShiftTimer/scrollSpeed > len(modeMessage) - 4):
+                digitShiftTimeStart = time.time()
 
             # prints current mode to seven segment display
-            seven_segment_display(modeMessage)
+            seven_segment_display(modeMessage, currentDigit)
 
             # collects the raw thermistor data
             rawThermistorData = poll_thermistor()
