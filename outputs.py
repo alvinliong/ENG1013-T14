@@ -1,5 +1,5 @@
 # Outputs subsystem
-# Last edited: 15 Sep 2023
+# Last edited: 13 Oct 2023
 # Version 1.0
 
 # import functions and files
@@ -55,11 +55,11 @@ def temperature_led_outputs(temperature: float, goalTempRange: list[float] = [20
 
     if temperature >= minGoalTemp and temperature <= maxGoalTemp:
         consoleMessage = "Ambient temperature is within the goal temperature range."
-        modeMessage = "TEMP IN RANGE - MODE: IDLE"
+        modeMessage = "TEMP IN RANGE - MODE IDLE"
 
     elif temperature < minGoalTemp:
         consoleMessage = 'Ambient temperature is below the goal temperature range, heating ventilation commencing.'
-        modeMessage = "TEMP UNDER - MODE: HEATING"
+        modeMessage = "TEMP UNDER - MODE HEATING"
         board.digital_pin_write(ledPinRed, 1)
         board.digital_pin_write(ledSpeedPins[0], 1)
         if abs(temperature - minGoalTemp) > highSpeedDiff:
@@ -67,7 +67,7 @@ def temperature_led_outputs(temperature: float, goalTempRange: list[float] = [20
 
     elif temperature > maxGoalTemp:
         consoleMessage = "Ambient temperature is above the goal temperature range, cooling ventilation commencing."
-        modeMessage = "TEMP OVER - MODE: COOLING"
+        modeMessage = "TEMP OVER - MODE COOLING"
         board.digital_pin_write(ledPinBlue, 1)
         board.digital_pin_write(ledSpeedPins[0], 1)
         if abs(maxGoalTemp - temperature) > highSpeedDiff:
@@ -158,7 +158,7 @@ def temperature_diff(tempList:list[float]) -> float:
     Prints a console message and sounds a buzzer if the rate of temperature change is of high enough magnitude. Also returns the rate of change when called
     :param tempList, A list containing recorded temperature values with the latest value at the end
     '''
-    buzzerPin = 14
+    buzzerPin = 3
     board.set_pin_mode_pwm_output(buzzerPin)
     magnitude = 5 # Max change in one polling loop time before alert triggers
     sample = 3 # How many dT/dt values it samples to get temperature change
@@ -199,8 +199,7 @@ def seven_segment_display(currentMessage, currentDigit):
     """
 
     # Set the pins for the 4-digit 7-segment display
-    # segmentPins = [18, 16, 19, 3, 2, 17, 4]
-    serPin = 3
+    serPin = 16
     rclkPin = 4
     srclkPin = 5
     # Set the common pins for the digits (anodes)

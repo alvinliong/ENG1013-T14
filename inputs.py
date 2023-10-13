@@ -1,5 +1,5 @@
 # Inputs subsystem
-# Last edited: 15 Sep 2023
+# Last edited: 13 Oct 2023
 # Version 1.0
 
 # import functions and files
@@ -13,10 +13,12 @@ def poll_thermistor():
     :return rawData (int)
     """
 
-    # initialise pins as inputs/outputs
-    board.set_pin_mode_analog_input(1)  # thermistor input
+    thermistorPin = 0
 
-    rawThermistorData = board.analog_read(1)[0]
+    # initialise pins as inputs/outputs
+    board.set_pin_mode_analog_input(thermistorPin)  # thermistor input
+
+    rawThermistorData = board.analog_read(thermistorPin)[0]
     # print("Raw thermistor data has been retrieved.")
     return rawThermistorData
 
@@ -40,7 +42,7 @@ def thermistor_processing(rawThermistorData):
         # print(f"Resistance: {resistance}")
 
         # converting the resistance to temperature
-        temperature = -21.21*(resistance/1000) + 72.203
+        temperature = -9*(resistance/1000) + 125
     except ValueError:
         temperature = 0
     except ZeroDivisionError:
@@ -48,3 +50,34 @@ def thermistor_processing(rawThermistorData):
 
     # print("Thermistor data has been processed and now returning temperature measurement.")
     return temperature
+
+
+def poll_button():
+    """
+    This function retrieves data from the button input
+    :return 
+    """
+
+    buttonPin = 15
+    board.set_pin_mode_digital_input(buttonPin)
+
+    # to generate a single trigger per press of button
+    if (board.digital_read(buttonPin)[0] == 1):
+        while True:
+            if (board.digital_read(8)[0] == 0):
+                return ("PUSH")
+            
+def poll_ldr():
+    """
+    This function retrieves data from the ldr input
+    :return 
+    """
+
+    ldrPin = 0
+
+    # initialise pins as inputs/outputs
+    board.set_pin_mode_analog_input(ldrPin)  # ldr input
+
+    rawLDRData = board.analog_read(ldrPin)[0]
+
+    return rawLDRData

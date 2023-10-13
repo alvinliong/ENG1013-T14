@@ -1,6 +1,6 @@
 # Settings file where all global user-modifiable variables are initialised
 # Creator: HVAC Project T14
-# Last edited: 15 Sep
+# Last edited: 13 Oct 2023
 
 # import functions and files
 from pymata4 import pymata4

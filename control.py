@@ -1,11 +1,11 @@
 # Control subsystem
-# Last edited: 15 Sep 2023
+# Last edited: 13 Oct 2023
 # Version 1.0
 
 # import functions and files
 from settings import *
 from outputs import temperature_led_outputs, seven_segment_display, thermometer_outputs, temperature_diff
-from inputs import thermistor_processing, poll_thermistor
+from inputs import thermistor_processing, poll_thermistor, poll_button
 import time
 
 
@@ -22,6 +22,7 @@ def polling_loop(pollingTime):
     digitShiftTimeStart = time.time()
 
     loopTimeStart = time.time()
+    currentMode = "AUTO"
     modeMessage = "    "
     currentTemperature = 0
     filteredTemperature = 0
@@ -54,7 +55,16 @@ def polling_loop(pollingTime):
             rawThermistorData = poll_thermistor()
 
             # detect rapid change
-            # temperature_diff(temperatureList)
+            temperature_diff(temperatureList)
+
+            # check button press
+            if (poll_button() == "PUSH"):
+                if currentMode == "AUTO":
+                    currentMode = "COOL"
+                elif currentMode == "COOL":
+                    currentMode = "HEAT"
+                elif currentMode == "HEAT":
+                    currentMode = "AUTO"
 
             # processes the thermistor data and converts to temperature
             currentTemperature = thermistor_processing(rawThermistorData)
