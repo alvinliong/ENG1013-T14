@@ -34,9 +34,8 @@ def polling_loop(pollingTime):
             # outputs LEDs based on temperature
             modeMessage, consoleMessage = temperature_led_outputs(
                 filteredTemperature)
-            
-            
-            thermometer_outputs(18)
+        
+            thermometer_outputs(filteredTemperature)
             
              # add extra space for 4+ character message to loop clearly
             if len(modeMessage) > 4:
@@ -53,6 +52,9 @@ def polling_loop(pollingTime):
 
             # collects the raw thermistor data
             rawThermistorData = poll_thermistor()
+
+            # detect rapid change
+            # temperature_diff(temperatureList)
 
             # processes the thermistor data and converts to temperature
             currentTemperature = thermistor_processing(rawThermistorData)

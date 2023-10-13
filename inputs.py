@@ -28,20 +28,22 @@ def thermistor_processing(rawThermistorData):
     :return temperature (float)
     """
 
-    voltageIn = 5  # voltage supply
-    resistor1 = 10000  # resistor in series with thermistor (Ohms)
-
-    # calculating the resistance of the thermistor
-    # print(f"Raw thermistor value (analog): {rawThermistorData}")
-    voltageOut = rawThermistorData * (voltageIn/1023)
-    # print(f"Voltage Out: {voltageOut}")
-    resistance = (resistor1 * voltageOut) / (voltageIn - voltageOut)
-    # print(f"Resistance: {resistance}")
-
-    # converting the resistance to temperature
     try:
-        temperature = -6.7606*(resistance/1000) + 94.406
+        voltageIn = 5  # voltage supply
+        resistor1 = 10000  # resistor in series with thermistor (Ohms)
+
+        # calculating the resistance of the thermistor
+        # print(f"Raw thermistor value (analog): {rawThermistorData}")
+        voltageOut = rawThermistorData * (voltageIn/1023)
+        # print(f"Voltage Out: {voltageOut}")
+        resistance = (resistor1 * voltageOut) / (voltageIn - voltageOut)
+        # print(f"Resistance: {resistance}")
+
+        # converting the resistance to temperature
+        temperature = -21.21*(resistance/1000) + 72.203
     except ValueError:
+        temperature = 0
+    except ZeroDivisionError:
         temperature = 0
 
     # print("Thermistor data has been processed and now returning temperature measurement.")

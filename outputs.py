@@ -76,16 +76,16 @@ def temperature_led_outputs(temperature: float, goalTempRange: list[float] = [20
     return [modeMessage, consoleMessage]
 
 def thermometer_outputs(temperature: float):
-
-    temperature = 3
     """
     Writes the LEDs for the thermometer. The LEDs use a shift register
     """
     serPin = 19
     srclkPin = 2
     rclkPin = 18
-    srclrPin = 5
-    oePin = 6
+
+    board.set_pin_mode_digital_output(serPin)
+    board.set_pin_mode_digital_output(rclkPin)
+    board.set_pin_mode_digital_output(srclkPin)
 
     tempRange = [0,30] # [Min, Max] temperature
     tempRange = [tempRange[0]] + [(tempRange[1]-tempRange[0])*i/7 for i in range(1,8)]
@@ -98,25 +98,21 @@ def thermometer_outputs(temperature: float):
         else:
             bits.append(0)
     bits = bits[::-1]
-
-    board.digital_pin_write(rclkPin, 0)
     
     clear = [0]*8
     for i in clear:
-        board.digital_pin_write(serPin, i)
-        board.digital_pin_write(srclkPin, 1)
-        board.digital_pin_write(srclkPin, 0)
-        board.digital_pin_write(serPin, 0)
-    board.digital_pin_write(rclkPin, 1)
-    board.digital_pin_write(rclkPin, 0)
+        board.digital_write(serPin, i)
+        board.digital_write(srclkPin, 0)
+        board.digital_write(srclkPin, 1)
+    board.digital_write(rclkPin, 0)
+    board.digital_write(rclkPin, 1)
 
     for i in bits:
-        board.digital_pin_write(serPin, i)
-        board.digital_pin_write(srclkPin, 1)
-        board.digital_pin_write(srclkPin, 0)
-        board.digital_pin_write(serPin, 0)
-    
-    board.digital_pin_write(rclkPin, 1)
+        board.digital_write(serPin, i)
+        board.digital_write(srclkPin, 0)
+        board.digital_write(srclkPin, 1)
+    board.digital_write(rclkPin, 0)
+    board.digital_write(rclkPin, 1)
 
 
 
