@@ -158,11 +158,15 @@ def temperature_diff(tempList:list[float]) -> float:
     Prints a console message and sounds a buzzer if the rate of temperature change is of high enough magnitude. Also returns the rate of change when called
     :param tempList, A list containing recorded temperature values with the latest value at the end
     '''
-    buzzerPin = 2
+    buzzerPin = 14
     board.set_pin_mode_pwm_output(buzzerPin)
     magnitude = 5 # Max change in one polling loop time before alert triggers
     sample = 3 # How many dT/dt values it samples to get temperature change
     dt = systemSettings.get('pollingTime')
+    
+    if len(tempList) < 2:
+        return 0
+    
     dT = [tempList[i] - tempList[i-1] for i in range(1,len(tempList))]
 
     if len(dT) < sample:
