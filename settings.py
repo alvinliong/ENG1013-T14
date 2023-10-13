@@ -115,7 +115,7 @@ systemSettingsParameters = {
     "blankSetting": None,  # blank placeholder setting
     # the user PIN must be between a value of 0 and 9999 (max 4 digits)
     "maintenancePIN": [0, 9999],
-    "pollingTime": [1.0, 3.0],  # polling time must be between 1 and 3 seconds
+    "pollingTime": [0.0, 3.0],  # polling time must be between 1 and 3 seconds
     # lockout time must be between 1 and 120 seconds
     "pinAttemptsLockoutTime": [1.0, 120.0],
     "adminAccessTimeoutDuration": [0.0, 120.0]

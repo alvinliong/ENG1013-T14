@@ -76,12 +76,14 @@ def temperature_led_outputs(temperature: float, goalTempRange: list[float] = [20
     return [modeMessage, consoleMessage]
 
 def thermometer_outputs(temperature: float):
+
+    temperature = 3
     """
     Writes the LEDs for the thermometer. The LEDs use a shift register
     """
-    serPin = 2
-    srclkPin = 3
-    rclkPin = 4
+    serPin = 19
+    srclkPin = 2
+    rclkPin = 18
     srclrPin = 5
     oePin = 6
 
